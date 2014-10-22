@@ -21,7 +21,8 @@ gulp.task('docs', function() {
       from: 'markdown',
       to: 'html5',
       ext: '.html',
-      args: ['--smart']
+      args: ['--smart'],
+      opts: { cwd: 'docs' }
     }))
     .pipe(gulp.dest('public/'));
 });
@@ -56,6 +57,13 @@ The extension of the soon-to-be converted documents, eg: `.html`.
 **Type:** array
 
 Additional command line flags, eg: `['--smart', '--css=style.css']`.
+
+#### options.opts
+
+**Type:** object
+
+Additional options for the Pandoc process, eg: `['--smart', '--css=style.css']`.
+See [Node.js child process spawn docs](http://nodejs.org/api/child_process.html#child_process_child_process_spawn_command_args_options) for more details.
 
 ## License
 

@@ -11,11 +11,12 @@ var PluginName  = 'gulp-pandoc';
 
 /* Exports */
 
-module.exports = function(opts) {
-  var from = opts.from;
-  var to   = opts.to;
-  var ext  = opts.ext;
-  var args = opts.args;
+module.exports = function(options) {
+  var from = options.from;
+  var to   = options.to;
+  var ext  = options.ext;
+  var args = options.args;
+  var opts = options.opts;
 
   if (!from) { throw new PluginError(PluginName, '"from" is not defined'); }
   if (!to) { throw new PluginError(PluginName, '"to" is not defined'); }
@@ -23,23 +24,23 @@ module.exports = function(opts) {
 
   return through.obj(function (file, enc, cb) {
     var input = file.contents.toString();
-    if (file.isNull())  { 
+    if (file.isNull())  {
       this.push(file);
       return cb();
     }
-    
+
     if (file.isStream()) {
-      this.emit('error', new PluginError(PluginName, 'Streaming not supported')); 
+      this.emit('error', new PluginError(PluginName, 'Streaming not supported'));
       return cb();
     }
 
-    pdc(input, from, to, args, function(err, output) {
+    pdc(input, from, to, args, opts, function(err, output) {
       if (err) {
         this.emit('error', err.toString());
         return cb();
       }
       file.contents = new Buffer(output);
-      file.path = gutil.replaceExtension(file.path, opts.ext);
+      file.path = gutil.replaceExtension(file.path, ext);
       this.push(file);
       return cb();
     }.bind(this));
